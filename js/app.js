@@ -4,10 +4,9 @@
 // ---------------------------------------------------|
 // ---------------------------------------------------|
 
-
-// ---------------------------------------------------|
-// ------------------- | Functions | -----------------|
-// ---------------------------------------------------|
+    // ---------------------------------------------------|
+    // ------------------- | Functions | -----------------|
+    // ---------------------------------------------------|
 
 // Focusing the first input on entering page
 function focusFirstInput() {
@@ -18,7 +17,6 @@ function focusFirstInput() {
 function creditCardPlaceholder() {
     $("#cc-num").attr("placeholder", "xxxxxxxxxxxxxxxx");
 }
-
 
 // If the 'other' option is selected, add input for
 // the user to specify his or her own job role
@@ -77,7 +75,6 @@ function manageTshirt() {
     });
 }
 
-
 function preventDoubleBook() {
     // Create an array with the checkboxes to make the traversal easier:
     var activities = $(".activities").children().children().filter("input");
@@ -88,7 +85,6 @@ function preventDoubleBook() {
     $(activitiesArr).eq(3).addClass("tue-9-12");
     $(activitiesArr).eq(2).addClass("tue-1-4");
     $(activitiesArr).eq(4).addClass("tue-1-4");
-
 
     // When Tuesday 9-12 days interferes with one another, add classes and disable checkbox;
     $(".tue-9-12").click(function() {
@@ -154,10 +150,11 @@ function incrementPrice() {
 }
 
 function managePayment() {
-
+    // Get the credit card value from the payment option:
     $("#payment").val("credit card");
+    // Assign a variable to the last fieldset on the document
     var paymentContainer = $("fieldset:last-of-type");
-
+    // function that shows every payment option
     function showEverything() {
         $(paymentContainer).find("p").eq(1).show();
         $(paymentContainer).find("p").eq(0).show();
@@ -173,26 +170,30 @@ function managePayment() {
     function hidePayPal() {
         $(paymentContainer).find("p").eq(0).hide();
     }
-
+    // function to hide the credit card
     function hideCreditCard() {
         $("#credit-card").hide();
     }
-
+    // Initially hide the bitcoin and paypal option:
     hidePayPal();
     hideBitcoin();
 
+    // Remove the select method since it is no longer useful:
     $("#payment option[value='select_method']").remove();
 
-
+    // When the payment option is changed:
     $("#payment").change(function() {
-
+        // initially show everything:
         showEverything();
+        //1. And if the payment option is paypal, hide the rest of the options:
         if ($("#payment").val() === 'paypal') {
             hideBitcoin();
             hideCreditCard();
+            // 2.
         } else if ($("#payment").val() === 'bitcoin') {
             hideCreditCard();
             hidePayPal();
+            // 3.
         } else if ($("#payment").val() === 'credit card') {
             hidePayPal();
             hideBitcoin();
@@ -204,22 +205,25 @@ function managePayment() {
 // ---------------------------------------------------|
 // ------------------- | VALIDATION | ----------------|
 // ---------------------------------------------------|
-
-// ---------------------------------------------------|
-// -------------- | Callback Functions | -------------|
-// ---------------------------------------------------|
+    // ---------------------------------------------------|
+    // -------------- | Callback Functions | -------------|
+    // ---------------------------------------------------|
+// The return false / return true is crucial for the outcome of the validation in each callback function.
 
 // This is a callback function for the 'validateForm'-function.
 function validateNameFields() {
+    // 1. If the name textfield is empty:
     if ($("#name").val() === "") {
         console.log("One of the namefields are not filled in.");
+        //2. scroll to the top:
         window.scrollTo(0, 0);
+        //3. Prompt the user to write a name and focus on the textfield:
         $("#name").attr("placeholder", "Please write your name.").focus();
+        //4. When the textfield is not focused anympore, remove the attribute from the textfield:
         $("#name").blur("on", function() {
             $(this).attr("placeholder", "");
         });
         return false;
-
     } else {
         return true;
     }
@@ -228,10 +232,13 @@ function validateNameFields() {
 // This is a callback function for the 'validateForm'-function.
 function validateEmail() {
     var email = $("#mail").val();
+    // I must say that I am not that familiar with regular expressions.
+    // This one i snipped of the internet:
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    // 1. If the email string is false:
     if (re.test(email) === false) {
-
         console.log("Insert a correct email");
+        // 1. Scroll to the top:
         window.scrollTo(0, 0);
         $("#mail").attr("placeholder", "Please insert a correct email.").focus();
         $("#mail").blur("on", function() {
@@ -284,6 +291,7 @@ function validatePayment() {
         return true;
     }
 }
+
 // This is a callback function for the 'validateForm'-function.
 function validateCreditCard() {
     // If the payment option is not credit card,
@@ -307,7 +315,6 @@ function validateCreditCard() {
     return re.test(creditCardInt);
 }
 
-
 // The function that checks with every callback ------2------
 function validateForm() {
     $("button").click(function(event) {
@@ -321,23 +328,9 @@ function validateForm() {
 }
 
 
-// // The function that checks with every callback ------2------
-// function validateForm() {
-//     $("button").click(function(event) {
-//         if (validateNameFields() === true && validateEmail() === true && validateActivities() === true && validateCreditCard() === true) {
-//             console.log("Validation Passed");
-//         } else {
-//             event.preventDefault();
-//             console.log("You shall not pass!");
-//         }
-//     });
-// }
-
-
-
 
 // ---------------------------------------------------|
-// ------------ | When page is rendered: | -----------|
+// ---------- | When document is ready: | ------------|
 // ---------------------------------------------------|
 
 $(document).ready(function() {
