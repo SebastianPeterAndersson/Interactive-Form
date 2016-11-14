@@ -15,7 +15,7 @@ function focusFirstInput() {
 }
 
 function creditCardPlaceholder() {
-    $("#cc-num").attr("placeholder", "xxxxxxxxxxxxxxxx");
+//nothing here
 }
 
 // If the 'other' option is selected, add input for
@@ -86,6 +86,12 @@ function preventDoubleBook() {
     $(activitiesArr).eq(2).addClass("tue-1-4");
     $(activitiesArr).eq(4).addClass("tue-1-4");
 
+
+
+
+
+
+
     // When Tuesday 9-12 days interferes with one another, add classes and disable checkbox;
     $(".tue-9-12").click(function() {
         // If the checkbox has the class of dis-checked:
@@ -104,23 +110,24 @@ function preventDoubleBook() {
         }
     });
 
-    // When Tuesday 1-4 interferes with one another, add classes and disable checkbox
     $(".tue-1-4").click(function() {
-        // If the checkbox does not have the class of dis-checked:
+        // If the checkbox has the class of dis-checked:
         if (!$(this).hasClass("dis-checked")) {
+            // Disable the other checkbox by disabling checkbox and adding gray color to make it look more disabled:
             $(".tue-1-4").not(this).attr("disabled", true);
             $(".tue-1-4").not(this).parent().toggleClass("checkColor");
             // Add class to let the program know it has been clicked before and therefore should not be changed next time:
             $(this).toggleClass("dis-checked");
-            // If the checkbox is active and has been clicked before:
+
         } else {
-            // Make the other option available again:
             $(".tue-1-4").not(this).removeAttr("disabled");
             $(this).toggleClass("dis-checked");
             $(this).toggleClass("checkColor");
             $(".tue-1-4").not(this).parent().toggleClass("checkColor");
         }
     });
+
+
 }
 
 // Function to dynamically add the current cost of the conference:
@@ -248,6 +255,19 @@ function validateEmail() {
     return re.test(email);
 }
 
+
+function validateTshirt () {
+    if ( $("#design").val() === "Select Theme") {
+        //jump to the top:
+        location.href = "#first-legend";
+        // Give the user a minor prompt:
+        $("select#design option:first-child").text("Select Theme!");
+        return false;
+    } else {
+        return true;
+    }
+}
+
 // This is a callback function for the 'validateForm'-function.
 function validateActivities() {
     // Variable to determine how many checkboxes that have been checked:
@@ -280,7 +300,7 @@ function validatePayment() {
         return true;
     }
 
-    if ($("#zip").val() === "" || $("#cvv").val() === "") {
+    if ($("#zip").val() === "" || $("#cvv").val().length !== 3) {
         console.log("One of the payment fields are not filled in");
         $("#zip").attr("placeholder", "Enter zip").focus().val("");
         $("#zip").blur("on", function() {
@@ -304,9 +324,10 @@ function validateCreditCard() {
     var creditCardInt = parseInt(creditCard);
     // I must say that I am not that familiar with regular expressions.
     // This one i snipped of the internet:
-    var re = /^5[1-5]\d{2}-?\d{4}-?\d{4}-?\d{4}$/;
+    var re =  /^(\d{4})(\d{4})?(\d{4})?(\d{4})?/;
+    //  /^5[1-5]\d{2}-?\d{4}-?\d{4}-?\d{4}$/;
     if (re.test(creditCardInt) === false) {
-        $("#cc-num").attr("placeholder", "No dashes, no spaces.").focus().val("");
+        $("#cc-num").focus().val("").attr("Invalid credit card number");
         $("#cc-num").blur("on", function() {
             $(this).attr("placeholder", "");
         });
@@ -318,7 +339,7 @@ function validateCreditCard() {
 // The function that checks with every callback ------2------
 function validateForm() {
     $("button").click(function(event) {
-        if (validateNameFields() === true && validateEmail() === true && validateActivities() === true && validateCreditCard() === true && validatePayment() === true) {
+        if (validateNameFields() && validateEmail() && validateActivities() && validateCreditCard() && validatePayment() && validateTshirt() ) {
             console.log("Validation Passed");
         } else {
             event.preventDefault();
